@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<script>
+    var keyValue = $.request("keyValue");
+    $(function () {
+        if (!!keyValue) {
+            $.ajax({
+                url: "/SystemManage/Students/GetFormJson",
+                data: { keyValue: keyValue },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    $("#form1").formSerialize(data);
+                }
+            });
+        }
+    });
+
+    function submitForm() {
+        if (!$('#form1').formValid()) {
+            return false;
+        }
+        $.submitForm({
+            url: "/SystemManage/Students/SubmitForm?keyValue=" + keyValue,
+            param: $("#form1").formSerialize(),
+            success: function () {
+                $.currentWindow().$("#gridList").resetSelection();
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+            }
+        })
+    }
+</script>
+
+<form id="form1">
+    <div style="padding-top: 20px; margin-right: 20px;">
+        <table class="form">
+            <tr>
+                <th class="formTitle">姓名</th>
+                <td class="formValue">
+                    <input id="StuName" name="StuName" type="text" class="form-control required" placeholder="请输入姓名" />
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">性别</th>
+                <td class="formValue">
+                    <input id="StuSex" name="StuSex" type="text" class="form-control required" placeholder="请输入性别" />
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">年龄</th>
+                <td class="formValue">
+                    <input id="Years" name="Years" type="text" class="form-control required" placeholder="请输入年龄" />
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">年级</th>
+                <td class="formValue">
+                    <input id="Grade" name="Grade" type="text" class="form-control required" />
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle" valign="top" style="padding-top: 5px;">地址
+                </th>
+                <td class="formValue">
+                    <input id="Address" name="Address" type="text" class="form-control required" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
